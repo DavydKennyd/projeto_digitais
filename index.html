@@ -54,13 +54,21 @@
     <h1>Flip-Flop JK (Síncrono e Assíncrono)</h1>
     <div class="container">
         <div class="flipflop">
-            <h2>Flip-Flop JK</h2>
+            <h2>Flip-Flop JK Síncrono</h2>
             <p>J: <span id="j">0</span> | K: <span id="k">0</span></p>
             <p>Clock: <span id="clock">0</span> <span id="clock-indicator" class="indicator low"></span></p>
             <p>Q: <span id="q">0</span> | Q': <span id="q_bar">1</span></p>
             <button onclick="toggleJK('j')">Toggle J</button>
             <button onclick="toggleJK('k')">Toggle K</button>
             <button onclick="toggleClock()">Clock Pulse</button>
+        </div>
+
+        <div class="flipflop">
+            <h2>Flip-Flop JK Assíncrono</h2>
+            <p>Preset (Set): <span id="preset">0</span> | Clear (Reset): <span id="clear">0</span></p>
+            <p>Q: <span id="q_async">0</span> | Q': <span id="q_bar_async">1</span></p>
+            <button onclick="togglePreset()">Preset (Set)</button>
+            <button onclick="toggleClear()">Clear (Reset)</button>
         </div>
 
         <div class="flipflop">
@@ -72,6 +80,7 @@
 
     <script>
         let j = 0, k = 0, clock = 0, q = 0;
+        let preset = 0, clear = 0, q_async = 0;
         let register = [0, 0, 0, 0];
 
         function toggleJK(input) {
@@ -96,6 +105,28 @@
 
             document.getElementById('q').textContent = q;
             document.getElementById('q_bar').textContent = q ? 0 : 1;
+        }
+
+        function togglePreset() {
+            preset = preset ? 0 : 1;
+            clear = 0; // Desativa Clear se ativar Preset
+            updateAsyncFlipFlop();
+        }
+
+        function toggleClear() {
+            clear = clear ? 0 : 1;
+            preset = 0; // Desativa Preset se ativar Clear
+            updateAsyncFlipFlop();
+        }
+
+        function updateAsyncFlipFlop() {
+            if (preset) q_async = 1;
+            else if (clear) q_async = 0;
+
+            document.getElementById('preset').textContent = preset;
+            document.getElementById('clear').textContent = clear;
+            document.getElementById('q_async').textContent = q_async;
+            document.getElementById('q_bar_async').textContent = q_async ? 0 : 1;
         }
 
         function shiftRegister() {
