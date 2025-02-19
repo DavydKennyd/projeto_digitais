@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flip-Flop JK</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #282c36;
+            color: white;
+            margin: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .flipflop {
+            display: inline-block;
+            padding: 20px;
+            border: 2px solid #61dafb;
+            background: #1e222a;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(97, 218, 251, 0.5);
+        }
+        button {
+            margin: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            background: #61dafb;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #4fa3d1;
+        }
+        .indicator {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+        .high { background: #61dafb; }
+        .low { background: #555; }
+    </style>
+</head>
+<body>
+    <h1>Flip-Flop JK (Síncrono e Assíncrono)</h1>
+    <div class="container">
+        <div class="flipflop">
+            <h2>Flip-Flop JK</h2>
+            <p>J: <span id="j">0</span> | K: <span id="k">0</span></p>
+            <p>Clock: <span id="clock">0</span> <span id="clock-indicator" class="indicator low"></span></p>
+            <p>Q: <span id="q">0</span> | Q': <span id="q_bar">1</span></p>
+            <button onclick="toggleJK('j')">Toggle J</button>
+            <button onclick="toggleJK('k')">Toggle K</button>
+            <button onclick="toggleClock()">Clock Pulse</button>
+        </div>
+
+        <div class="flipflop">
+            <h2>Registrador de 4 Bits (JK)</h2>
+            <p>Estado: <span id="register">0000</span></p>
+            <button onclick="shiftRegister()">Shift Clock</button>
+        </div>
+    </div>
+
+    <script>
+        let j = 0, k = 0, clock = 0, q = 0;
+        let register = [0, 0, 0, 0];
+
+        function toggleJK(input) {
+            if (input === 'j') j = j ? 0 : 1;
+            if (input === 'k') k = k ? 0 : 1;
+            document.getElementById('j').textContent = j;
+            document.getElementById('k').textContent = k;
+        }
+
+        function toggleClock() {
+            clock = clock ? 0 : 1;
+            document.getElementById('clock').textContent = clock;
+            document.getElementById('clock-indicator').className = clock ? 'indicator high' : 'indicator low';
+            if (clock === 1) updateFlipFlop();
+        }
+
+        function updateFlipFlop() {
+            if (j === 0 && k === 0) q = q; // No change
+            else if (j === 0 && k === 1) q = 0; // Reset
+            else if (j === 1 && k === 0) q = 1; // Set
+            else if (j === 1 && k === 1) q = q ? 0 : 1; // Toggle (borda de subida)
+
+            document.getElementById('q').textContent = q;
+            document.getElementById('q_bar').textContent = q ? 0 : 1;
+        }
+
+        function shiftRegister() {
+            register.pop();
+            register.unshift(q);
+            document.getElementById('register').textContent = register.join('');
+        }
+    </script>
+</body>
+</html>
